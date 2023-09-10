@@ -1,0 +1,40 @@
+# .gitignore for ASP.NET Core
+
+# Visual Studio files
+.vscode/
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Binaries
+bin/
+obj/
+
+# User-specific files and settings
+.suo
+*.user
+*.suo
+*.user
+*.suo
+.suo
+.user
+.suo
+
+# .NET artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Visual Studio Code folders
+.vscode/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Mac OS and Linux files
+.DS_Store
+Thumbs.db
