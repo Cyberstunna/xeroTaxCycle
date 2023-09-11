@@ -1,8 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    ViewData["UserName"] = "Brittany Sawyer";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-left">
+    <h1 class="display-6 fs-2 mb-5">Welcome, @ViewData["UserName"]</h1>
+    <div class="d-flex flex-row justify-content-between mb-5">
+        <p>Chart 1 for Exception by Version Number(Bar Chart)</p>
+        <p>Chart 1 for Exception by Exception Source(Pie Chart)</p>
+    </div>
+    <div class="d-flex flex-column justify-content-center mb-5">
+        <h1 class="text-center">Table of exceptions read from the Data.xml file</h1>
+    </div>
 </div>

@@ -38,3 +38,6 @@ artifacts/
 # Mac OS and Linux files
 .DS_Store
 Thumbs.db
+
+# Node modules
+/node_modules
