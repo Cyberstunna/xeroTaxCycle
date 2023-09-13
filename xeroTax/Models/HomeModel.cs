@@ -6,16 +6,14 @@ public class HomeModel {
     public Dictionary<string, int>? versionNumberChart;
 
     public Dictionary<string, int>? exceptionSourceChart;
+
+    public KeyValuePair<string, int>[]? topThreeSources;
+
+    public List<VulnerableProductInfo>? vulnerableProductVersions;
 }
 
-// public class VersionNumberChart {
-//     public string? versionNumber;
-
-//     public int count;
-// }
-
-// public class ExceptionSourceChart {
-//     public string? exceptionSource;
-
-//     public int count;
-// }
+public class VulnerableProductInfo {
+    public string? ProductName;
+    public string? MostVulnerableVersion;
+    public int TotalExceptions;
+}

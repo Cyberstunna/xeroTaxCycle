@@ -1,15 +1,182 @@
 ﻿@{
+    @model HomeModel
     ViewData["Title"] = "Home";
-    ViewData["UserName"] = "Brittany Sawyer";
+    ViewData["UserName"] = "Brittany";
+    var versionNumberKeys = new List<string>(Model.versionNumberChart.Keys);
+    var versionNumberValues = new List<int>(Model.versionNumberChart.Values);
+    var sourceNumberKeys = Model.exceptionSourceChart?.Keys?.ToList() ?? new List<string>();
+    var sourceNumberValues = Model.exceptionSourceChart?.Values?.ToList() ?? new List<int>();
 }
 
+<style>
+    /* Custom CSS for hover effect */
+.hoverable-div {
+    transition: transform 0.2s, box-shadow 0.2s; /* Add smooth transition */
+}
+@* 
+/* Apply the effect on hover */
+.hoverable-div:hover {
+    transform: scale(1.02); /* Increase size on hover (adjust the scale factor as needed) */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.552); /* Apply a shadow on hover */
+} *@
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <div class="text-left">
-    <h1 class="display-6 fs-2 mb-5">Welcome, @ViewData["UserName"]</h1>
-    <div class="d-flex flex-row justify-content-between mb-5">
-        <p>Chart 1 for Exception by Version Number(Bar Chart)</p>
-        <p>Chart 1 for Exception by Exception Source(Pie Chart)</p>
+    <h2 class="display-6 fs-2 mb-5">Version Exception Overview</h2>
+    <div class="row mb-5">
+        <div class="col-lg-6 col-md-12 mb-4 p-2">
+            <p>Application Version Exceptions</p>
+            <canvas id="versionExceptionChart" class="w-100"></canvas>
+        </div>
+        <div style="--bs-breadcrumb-divider: '|';" class="hoverable-div col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm breadcrumb d-flex flex-column">
+            <p class="display-6 fs-3 mb-4">Highest exceptions per product</p>
+            
+            @foreach(var product in Model.vulnerableProductVersions!){
+                <div class="mb-4 d-flex flex-column">
+                    <span class="fw-bold">@product.ProductName</span>
+                    <span>Most vulnerable version: @product.MostVulnerableVersion</span>
+                    <span>Total # of Exceptions: @product.TotalExceptions</span>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-info text-white fs-6 fw-bold">Flag Version</button>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
+
+    <div class="row mb-5 d-flex flex-wrap">
+        <h2 class="display-6 fs-2 mb-5">Exception Source Overview</h2>
+        <div class="col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm hoverable-div">
+            <p class="display-6 fs-3 mb-5">Top Sources by Impact</p>
+            @foreach (var source in Model.topThreeSources!){
+                <div class="mb-3 column d-flex flex-column">
+                    <span class="fs-4 fw-bold">@source.Key</span>
+                    <div class="pb-1 d-flex flex-row align-items-center">
+                        <div class="py-3 position-relative">
+                            <image style="height: 25px; weight: 25px; position: relative; z-index: 1;" class="rounded-circle" alt="Face" src="/images/random.jpg"></image>
+                            <image style="height: 25px; weight: 25px; position: relative; left: -15px; z-index: 2;" class="rounded-circle" alt="Face" src="/images/random3.jpeg"></image>
+                            <image style="height: 25px; weight: 25px; position: relative; left: -30px; z-index: 3;" class="rounded-circle" alt="Face" src="/images/random2.jpeg"></image>
+                        </div>
+                        <span class=" position-relative">and @(@source.Value - 3) others are experiencing this issue</span>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-info text-white fs-6 fw-bold">Request investigation with TaxCycle team</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="col-lg-6 col-md-12 mb-4 p-2">
+            <p>Exception Sources</p>
+            <canvas id="sourceExceptionChart" style="width: 400px; height: 200px;" class="w-100" width="200" height="200"></canvas>
+        </div>
+    </div>
+
     <div class="d-flex flex-column justify-content-center mb-5">
-        <h1 class="text-center">Table of exceptions read from the Data.xml file</h1>
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-5">
+            <h2 class="display-6 fs-2">Application Exception Logs</h2>
+            <input type="text" placeholder="Search by email or product" class="form-control w-50" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Reported Date</th>
+                        <th>Exception Type</th>
+                        <th>Exception Source</th>
+                        <th>Email</th>
+                        <th>Product Name</th>
+                        <th>Product Version</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var exception in Model.xmlFeedback!)
+                    {
+                        <tr>
+                            <td>@exception.SubmittedDateTimeUtc</td>
+                            <td>@exception.ExceptionType</td>
+                            <td>@exception.ExceptionSource</td>
+                            <td>@exception.Email</td>
+                            <td>@exception.ProductName</td>
+                            <td>@exception.ProductVersion</td>
+                            <td><a>
+                                <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="height: 20px; width: 20px;" class="text-info">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"></path>
+                                </svg>
+                            </a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script>
+    const ctx = document.getElementById('versionExceptionChart').getContext('2d');
+    const ctxExceptionSource = document.getElementById('sourceExceptionChart').getContext('2d');
+
+    const versionExceptionChartDataKeys = @Html.Raw(Json.Serialize(versionNumberKeys));
+    const versionExceptionChartDataValues = @Html.Raw(Json.Serialize(versionNumberValues));
+
+    const sourceExceptionChartDataKeys = @Html.Raw(Json.Serialize(sourceNumberKeys));
+    const sourceExceptionChartDataValues = @Html.Raw(Json.Serialize(sourceNumberValues));
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: versionExceptionChartDataKeys.map(data => data),
+            datasets: [{
+                data: versionExceptionChartDataValues.map(data => data),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar color
+                borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(255, 0, 0, 0.2)'
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+        }
+    });
+
+    new Chart(ctxExceptionSource, {
+        type: 'doughnut',
+        data: {
+            labels: sourceExceptionChartDataKeys.map(data => data),
+            datasets: [{
+                data: sourceExceptionChartDataValues.map(data => data),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar color
+                borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(255, 0, 0, 0.2)'
+            }],
+            hoverOffset: 4,
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+        }
+    });
+</script>
