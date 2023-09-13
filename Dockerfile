@@ -15,4 +15,6 @@ RUN dotnet publish -c release -o /web --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /web
 COPY --from=build-env /web ./
-ENTRYPOINT [ "dotnet", "xeroTax.dll" ]
+#ENTRYPOINT [ "dotnet", "xeroTax.dll" ]
+
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet xeroTax.dll
