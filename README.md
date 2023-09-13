@@ -2,6 +2,9 @@
 C# Web application presenting exceptions in Xero's Products
 ![Xero x Jarvis](readme.png)
 
+## Accessing the App
+The app can be accessed at the following URL: https://xero-tax-b39c83bd27ad.herokuapp.com/
+
 ## My Solution Mind Map
 The DataFile.xml issued was extremely rich in data detailing exception errors in different applications over a period of time. Given the nature of data, there are ample ways it can be utilized to give insight into important processes thus helping the user review the data more efficiently — the challenging part of this exercise was figuring out which insights to include.
 
