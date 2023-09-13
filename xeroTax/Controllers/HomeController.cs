@@ -69,8 +69,8 @@ public class HomeController : Controller
             );
 
         var top3Sources = sourceExceptionCounts?
-            .OrderByDescending(kv => kv.Value) // Order by count in descending order
-            .Take(3) // Take the top 3 entries
+            .OrderByDescending(kv => kv.Value)
+            .Take(3)
             .ToArray();
     
         var modelData = new HomeModel {

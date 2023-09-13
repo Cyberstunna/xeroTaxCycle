@@ -1,26 +1,11 @@
 ﻿@{
     @model HomeModel
     ViewData["Title"] = "Home";
-    ViewData["UserName"] = "Brittany";
     var versionNumberKeys = new List<string>(Model.versionNumberChart.Keys);
     var versionNumberValues = new List<int>(Model.versionNumberChart.Values);
     var sourceNumberKeys = Model.exceptionSourceChart?.Keys?.ToList() ?? new List<string>();
     var sourceNumberValues = Model.exceptionSourceChart?.Values?.ToList() ?? new List<int>();
 }
-
-<style>
-    /* Custom CSS for hover effect */
-.hoverable-div {
-    transition: transform 0.2s, box-shadow 0.2s; /* Add smooth transition */
-}
-@* 
-/* Apply the effect on hover */
-.hoverable-div:hover {
-    transform: scale(1.02); /* Increase size on hover (adjust the scale factor as needed) */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.552); /* Apply a shadow on hover */
-} *@
-
-</style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -31,7 +16,7 @@
             <p>Application Version Exceptions</p>
             <canvas id="versionExceptionChart" class="w-100"></canvas>
         </div>
-        <div style="--bs-breadcrumb-divider: '|';" class="hoverable-div col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm breadcrumb d-flex flex-column">
+        <div style="--bs-breadcrumb-divider: '|';" class="col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm breadcrumb d-flex flex-column">
             <p class="display-6 fs-3 mb-4">Highest exceptions per product</p>
             
             @foreach(var product in Model.vulnerableProductVersions!){
@@ -49,7 +34,7 @@
 
     <div class="row mb-5 d-flex flex-wrap">
         <h2 class="display-6 fs-2 mb-5">Exception Source Overview</h2>
-        <div class="col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm hoverable-div">
+        <div class="col-lg-6 col-md-12 mb-4 p-4 border rounded-3 shadow-sm">
             <p class="display-6 fs-3 mb-5">Top Sources by Impact</p>
             @foreach (var source in Model.topThreeSources!){
                 <div class="mb-3 column d-flex flex-column">
@@ -132,8 +117,8 @@
             labels: versionExceptionChartDataKeys.map(data => data),
             datasets: [{
                 data: versionExceptionChartDataValues.map(data => data),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar color
-                borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(255, 0, 0, 0.2)'
             }]
@@ -158,8 +143,8 @@
             labels: sourceExceptionChartDataKeys.map(data => data),
             datasets: [{
                 data: sourceExceptionChartDataValues.map(data => data),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Bar color
-                borderColor: 'rgba(75, 192, 192, 1)', // Border color
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(255, 0, 0, 0.2)'
             }],
